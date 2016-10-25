@@ -1,6 +1,9 @@
 ﻿{
   "dependencies": {
-    "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0"
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
+    "WaveEngine.Common": "2.3.0.29",
+    "WaveEngine.Components": "2.3.0.29",
+    "WaveEngine.Framework": "2.3.0.29"
   },
   "frameworks": {
     "uap10.0": {}

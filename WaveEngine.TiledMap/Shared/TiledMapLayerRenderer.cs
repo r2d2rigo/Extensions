@@ -24,6 +24,34 @@ using WaveEngine.Materials;
 
 namespace WaveEngine.TiledMap
 {
+    public struct VertexPositionColorDualTexture : IBasicVertex
+    {
+        public static readonly VertexBufferFormat VertexFormat;
+        public Vector3 Position;
+        public Color Color;
+        public Vector2 TexCoord;
+        public Vector2 TexCoord2;
+
+        VertexBufferFormat IBasicVertex.VertexFormat
+        {
+            get
+            {
+                return VertexPositionColorDualTexture.VertexFormat;
+            }
+        }
+
+        static VertexPositionColorDualTexture()
+        {
+            VertexFormat = new VertexBufferFormat(new VertexElementProperties[]
+                {
+                    new VertexElementProperties(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
+                    new VertexElementProperties(12, VertexElementFormat.Color, VertexElementUsage.Color, 0),
+                    new VertexElementProperties(16, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0),
+                    new VertexElementProperties(24, VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 1),
+                });
+        }
+    }
+
     /// <summary>
     /// Render a TiledMap Layer
     /// </summary>
@@ -48,7 +76,8 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Meshes list associated to its material
         /// </summary>
-        private List<Tuple<StandardMaterial, Mesh>> meshes;
+        // private List<Tuple<StandardMaterial, Mesh>> meshes;
+        private List<Tuple<DualMaterial, Mesh>> meshes;
 
         /// <summary>
         /// Tiles count
@@ -58,7 +87,8 @@ namespace WaveEngine.TiledMap
         /// <summary>
         /// Vertices data
         /// </summary>
-        VertexPositionColorTexture[] vertices;
+        // VertexPositionColorTexture[] vertices;
+        VertexPositionColorDualTexture[] vertices;
 
         /// <summary>
         /// The layer vertex buffer
@@ -137,6 +167,8 @@ namespace WaveEngine.TiledMap
         {
         }
 
+        private Texture2D lightmap;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TiledMapLayerRenderer" /> class.
         /// </summary>
@@ -155,7 +187,8 @@ namespace WaveEngine.TiledMap
         {
             base.DefaultValues();
             this.samplerMode = AddressMode.PointClamp;
-            this.meshes = new List<Tuple<StandardMaterial, Mesh>>();
+            // this.meshes = new List<Tuple<StandardMaterial, Mesh>>();
+            this.meshes = new List<Tuple<DualMaterial, Mesh>>();
             this.originTranslation = Matrix.Identity;
         }
         #endregion
@@ -346,7 +379,7 @@ namespace WaveEngine.TiledMap
                         }
                     }
                     break;
-                #endregion
+                    #endregion
             }
         }
 
@@ -381,8 +414,8 @@ namespace WaveEngine.TiledMap
                 var tuple = this.meshes[i];
                 var material = tuple.Item1;
                 var mesh = tuple.Item2;
-                
-                material.Alpha = opacity;
+
+                // material.Alpha = opacity;
                 material.LayerType = this.LayerType;
                 material.SamplerMode = this.samplerMode;
                 mesh.ZOrder = drawOrder;
@@ -418,6 +451,7 @@ namespace WaveEngine.TiledMap
             base.Initialize();
 
             this.tiledMap = this.Owner.Parent.FindComponent<TiledMap>();
+            this.lightmap = this.tiledMap.Owner.Scene.Assets.LoadAsset<Texture2D>("Content/Assets/Textures/Lightmap.png");
         }
 
         /// <summary>
@@ -435,8 +469,9 @@ namespace WaveEngine.TiledMap
                 this.nTiles = newNTiles;
 
                 // Vertices
-                this.vertices = new VertexPositionColorTexture[this.nTiles * verticesPerTile];
-                this.vertexBuffer = new DynamicVertexBuffer(VertexPositionColorTexture.VertexFormat);
+                // this.vertices = new VertexPositionColorTexture[this.nTiles * verticesPerTile];
+                this.vertices = new VertexPositionColorDualTexture[this.nTiles * verticesPerTile];
+                this.vertexBuffer = new DynamicVertexBuffer(VertexPositionColorDualTexture.VertexFormat);
 
                 // Indices
                 ushort[] indices = new ushort[this.nTiles * indicesPerTile];
@@ -603,24 +638,40 @@ namespace WaveEngine.TiledMap
             this.vertices[vertexId].Position = new Vector3(position.X, position.Y, 0);
             this.vertices[vertexId].Color = Color.White;
             this.vertices[vertexId].TexCoord = textCoord0;
+            this.vertices[vertexId].TexCoord2 = new Vector2(
+                                                        this.vertices[vertexId].Position.X / (float)(this.tiledMap.Width * this.tiledMap.TileWidth),
+                                                        (this.vertices[vertexId].Position.Y / (float)(this.tiledMap.Height * this.tiledMap.TileHeight))
+                                                        );
             vertexId++;
 
             // Vertex 1
             this.vertices[vertexId].Position = new Vector3(position.X + tileset.TileWidth, position.Y, 0);
             this.vertices[vertexId].Color = Color.White;
             this.vertices[vertexId].TexCoord = textCoord1;
+            this.vertices[vertexId].TexCoord2 = new Vector2(
+                                                        this.vertices[vertexId].Position.X / (float)(this.tiledMap.Width * this.tiledMap.TileWidth),
+                                                        (this.vertices[vertexId].Position.Y / (float)(this.tiledMap.Height * this.tiledMap.TileHeight))
+                                                        );
             vertexId++;
 
             // Vertex 2
             this.vertices[vertexId].Position = new Vector3(position.X + tileset.TileWidth, position.Y + tileset.TileHeight, 0);
             this.vertices[vertexId].Color = Color.White;
             this.vertices[vertexId].TexCoord = textCoord2;
+            this.vertices[vertexId].TexCoord2 = new Vector2(
+                                                        this.vertices[vertexId].Position.X / (float)(this.tiledMap.Width * this.tiledMap.TileWidth),
+                                                        (this.vertices[vertexId].Position.Y / (float)(this.tiledMap.Height * this.tiledMap.TileHeight))
+                                                        );
             vertexId++;
 
             // Vertex 3
             this.vertices[vertexId].Position = new Vector3(position.X, position.Y + tileset.TileHeight, 0);
             this.vertices[vertexId].Color = Color.White;
             this.vertices[vertexId].TexCoord = textCoord3;
+            this.vertices[vertexId].TexCoord2 = new Vector2(
+                                                        this.vertices[vertexId].Position.X / (float)(this.tiledMap.Width * this.tiledMap.TileWidth),
+                                                        (this.vertices[vertexId].Position.Y / (float)(this.tiledMap.Height * this.tiledMap.TileHeight))
+                                                        );
             vertexId++;
         }
 
@@ -640,19 +691,43 @@ namespace WaveEngine.TiledMap
                 this.vertexBuffer,
                 this.indexBuffer,
                 PrimitiveType.TriangleList)
-                {
-                    DisableBatch = true
-                };
-
-            StandardMaterial material = new StandardMaterial(this.LayerType, image)
             {
-                LightingEnabled = false,
-                SamplerMode = this.samplerMode
+                DisableBatch = true
             };
+
+            //StandardMaterial material = new StandardMaterial(this.LayerType, image)
+            //{
+            //    LightingEnabled = false,
+            //    SamplerMode = this.samplerMode
+            //};
+
+            //material.Initialize(this.Assets);
+
+            //this.meshes.Add(new Tuple<StandardMaterial, Mesh>(material, mesh));
+            DualMaterial material = null;
+
+            if (this.tiledMapLayer.TmxLayerName == "Background")
+            {
+                material = new DualMaterial(this.LayerType, image, lightmap)
+                {
+                    LightingEnabled = false,
+                    SamplerMode = this.samplerMode,
+                    EffectMode = DualTextureMode.Multiplicative,
+                };
+            }
+            else
+            {
+                material = new DualMaterial(this.LayerType, image)
+                {
+                    LightingEnabled = false,
+                    SamplerMode = this.samplerMode,
+                };
+            }
 
             material.Initialize(this.Assets);
 
-            this.meshes.Add(new Tuple<StandardMaterial, Mesh>(material, mesh));
+            this.meshes.Add(new Tuple<DualMaterial, Mesh>(material, mesh));
+
         }
 
         /// <summary>

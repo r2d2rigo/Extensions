@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaveEngine.TiledMap", "Projects\WaveEngine.TiledMap.csproj", "{E6BEC4AD-F13B-4293-A613-813898E9C916}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "WaveEngine.TiledMap.Shared", "Shared\WaveEngine.TiledMap.Shared.shproj", "{C4F43321-A626-49BF-8247-0123AB96E606}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaveEngineUWP.TiledMap", "Projects\WaveEngineUWP.TiledMap.csproj", "{21A34C36-8D1D-4A50-AEFA-1A5ED12F7358}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shared\WaveEngine.TiledMap.Shared.projitems*{e6bec4ad-f13b-4293-a613-813898e9c916}*SharedItemsImports = 4
+		Shared\WaveEngine.TiledMap.Shared.projitems*{21a34c36-8d1d-4a50-aefa-1a5ed12f7358}*SharedItemsImports = 4
+		Shared\WaveEngine.TiledMap.Shared.projitems*{c4f43321-a626-49bf-8247-0123ab96e606}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		NuGet|Any CPU = NuGet|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E6BEC4AD-F13B-4293-A613-813898E9C916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6BEC4AD-F13B-4293-A613-813898E9C916}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6BEC4AD-F13B-4293-A613-813898E9C916}.NuGet|Any CPU.ActiveCfg = NuGet|Any CPU
+		{E6BEC4AD-F13B-4293-A613-813898E9C916}.NuGet|Any CPU.Build.0 = NuGet|Any CPU
+		{E6BEC4AD-F13B-4293-A613-813898E9C916}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6BEC4AD-F13B-4293-A613-813898E9C916}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21A34C36-8D1D-4A50-AEFA-1A5ED12F7358}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21A34C36-8D1D-4A50-AEFA-1A5ED12F7358}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21A34C36-8D1D-4A50-AEFA-1A5ED12F7358}.NuGet|Any CPU.ActiveCfg = Release|Any CPU
+		{21A34C36-8D1D-4A50-AEFA-1A5ED12F7358}.NuGet|Any CPU.Build.0 = Release|Any CPU
+		{21A34C36-8D1D-4A50-AEFA-1A5ED12F7358}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21A34C36-8D1D-4A50-AEFA-1A5ED12F7358}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
